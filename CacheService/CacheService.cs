@@ -1,7 +1,8 @@
 ﻿using System.Collections.Generic;
 using System.Fabric;
+using System.Threading;
 using System.Threading.Tasks;
-using CacheService.Models;
+using CacheService.Model;
 using Microsoft.ServiceFabric.Data.Collections;
 using Microsoft.ServiceFabric.Services.Communication.Runtime;
 using Microsoft.ServiceFabric.Services.Remoting.Runtime;
@@ -24,20 +25,20 @@ namespace CacheService
             return this.CreateServiceRemotingReplicaListeners();
         }
 
-        public async Task<string> Get(string key)
+        public async Task<byte[]> GetAsync(string key, CancellationToken token)
         {
-            var dictionary = await StateManager.GetOrAddAsync<IReliableDictionary<string, string>>("cache");
+            var dictionary = await StateManager.GetOrAddAsync<IReliableDictionary<string, byte[]>>("cache");
             using (var tx = StateManager.CreateTransaction())
             {
                 var result = await dictionary.TryGetValueAsync(tx, key);
                 await tx.CommitAsync();
-                return result.HasValue ? result.Value : string.Empty;
+                return result.HasValue ? result.Value : new byte[0];
             }
         }
 
-        public async Task Store(string key, string value)
+        public async Task SetAsync(string key, byte[] value, CancellationToken token)
         {
-            var dictionary = await StateManager.GetOrAddAsync<IReliableDictionary<string, string>>("cache");
+            var dictionary = await StateManager.GetOrAddAsync<IReliableDictionary<string, byte[]>>("cache");
             using (var tx = StateManager.CreateTransaction())
             {
                 await dictionary.AddOrUpdateAsync(tx, key, value,
@@ -49,9 +50,9 @@ namespace CacheService
         }
    
 
-        public async Task Delete(string key)
+        public async Task RemoveAsync(string key, CancellationToken token)
         {
-            var dictionary = await StateManager.GetOrAddAsync<IReliableDictionary<string, string>>("cache");
+            var dictionary = await StateManager.GetOrAddAsync<IReliableDictionary<string, byte[]>>("cache");
             using (var tx = StateManager.CreateTransaction())
             {
                 await dictionary.TryRemoveAsync(tx, key);

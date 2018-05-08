@@ -1,17 +1,18 @@
-﻿using System.Threading.Tasks;
+﻿using System.Threading;
+using System.Threading.Tasks;
 using Microsoft.ServiceFabric.Services.Remoting;
 using Microsoft.ServiceFabric.Services.Remoting.FabricTransport;
 
 [assembly: FabricTransportServiceRemotingProvider(RemotingListener = RemotingListener.V2Listener, RemotingClient = RemotingClient.V2Client)]
 
-namespace CacheService.Models
+namespace CacheService.Model
 {
 
     public interface ICacheService: IService
     {
-        Task<string> GetAsync(string key);
+        Task<byte[]> GetAsync(string key, CancellationToken token);
 
-        Task Store(string key, string value);
-        Task Delete(string key);
+        Task SetAsync(string key, byte[] value, CancellationToken token);
+        Task RemoveAsync(string key, CancellationToken token);
     }
 }
