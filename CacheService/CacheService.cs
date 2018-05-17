@@ -27,18 +27,18 @@ namespace CacheService
 
         public async Task<byte[]> GetAsync(string key, CancellationToken token)
         {
-            var dictionary = await StateManager.GetOrAddAsync<IReliableDictionary<string, byte[]>>("cache");
+            var dictionary = await StateManager.GetOrAddAsync<IReliableDictionary<string, CacheItem>>("cache");
             using (var tx = StateManager.CreateTransaction())
             {
                 var result = await dictionary.TryGetValueAsync(tx, key);
                 await tx.CommitAsync();
-                return result.HasValue ? result.Value : new byte[0];
+                return (result.HasValue)? result.Value.Value : new byte[0];
             }
         }
 
-        public async Task SetAsync(string key, byte[] value, CancellationToken token)
+        public async Task SetAsync(string key, CacheItem value, CancellationToken token)
         {
-            var dictionary = await StateManager.GetOrAddAsync<IReliableDictionary<string, byte[]>>("cache");
+            var dictionary = await StateManager.GetOrAddAsync<IReliableDictionary<string, CacheItem>>("cache");
             using (var tx = StateManager.CreateTransaction())
             {
                 await dictionary.AddOrUpdateAsync(tx, key, value,

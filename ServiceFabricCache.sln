@@ -7,7 +7,7 @@ Project("{A07B5EB6-E848-4116-A8D0-A826331D98C6}") = "ServiceFabricCache", "Servi
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CacheService", "CacheService\CacheService.csproj", "{74CDF590-DFA6-47A3-830C-01E4BDC4B09F}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CacheService.Model", "CacheService.Model\CacheService.Model.csproj", "{8F6C8646-0F5A-4D94-83A5-FE44F6571280}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CacheService.Model", "CacheService.Model\CacheService.Model.csproj", "{8F6C8646-0F5A-4D94-83A5-FE44F6571280}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
