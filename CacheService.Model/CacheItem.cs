@@ -11,6 +11,22 @@ namespace CacheService.Model
 
         public DateTimeOffset Created { get; set; }
 
-        public DateTimeOffset LastReference { get; set; }
+        public DateTimeOffset? LastReference { get; set; }
+
+        public bool Deletable()
+        {
+            if (AbsoluteExpiration.HasValue)
+            {
+                if (DateTimeOffset.UtcNow > (DateTimeOffset) AbsoluteExpiration.Value)
+                    return true;
+            }
+
+            if (SlidingExpiration.HasValue)
+            {
+                return DateTimeOffset.UtcNow > Created + (TimeSpan) SlidingExpiration;
+            }
+
+            return false;
+        }
     }
 }

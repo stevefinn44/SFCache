@@ -14,5 +14,7 @@ namespace CacheService.Model
 
         Task SetAsync(string key, CacheItem value, CancellationToken token);
         Task RemoveAsync(string key, CancellationToken token);
+
+        Task RefreshAsync(string key, CancellationToken token);
     }
 }
